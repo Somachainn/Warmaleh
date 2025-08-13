@@ -1,99 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jiim Coin</title>
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laam Dex</title>
+<style>
     body {
-      background: linear-gradient(to right, #111, #222);
-      color: #f6c343;
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    header {
-      padding: 40px 20px;
-    }
-    img.logo {
-      width: 150px;
-      height: auto;
-      margin-bottom: 20px;
-      border-radius: 50%;
-      box-shadow: 0 0 20px #ffd700;
+        font-family: Arial, sans-serif;
+        background-color: #0f2a33;
+        color: #fff;
+        padding: 20px;
     }
     h1 {
-      font-size: 3em;
-      margin-bottom: 10px;
-      color: #ffd700;
+        text-align: center;
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #FFD700;
+        margin-bottom: 20px;
     }
-    p {
-      font-size: 1.1em;
-      max-width: 800px;
-      margin: auto;
-      line-height: 1.6;
+    label {
+        font-weight: bold;
     }
-    section {
-      margin-top: 40px;
+    input, select {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 5px;
+        border: none;
+        font-size: 1em;
+    }
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: #FFD700;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 1em;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #e6c200;
+    }
+    .section {
+        margin-bottom: 20px;
+    }
+    .public-key-box {
+        background-color: #1a3a45;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 0.9em;
+        word-break: break-all;
     }
     table {
-      margin: 20px auto;
-      border-collapse: collapse;
-      background: #333;
-      color: #fff;
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
     }
-    table td {
-      border: 1px solid #555;
-      padding: 10px 20px;
+    th, td {
+        padding: 8px;
+        text-align: center;
+        border-bottom: 1px solid #444;
     }
-    .buttons {
-      margin-top: 30px;
+    th {
+        background-color: #1a3a45;
     }
-    .buttons a {
-      text-decoration: none;
-      margin: 0 10px;
-      padding: 12px 20px;
-      background-color: #ffd700;
-      color: #000;
-      font-weight: bold;
-      border-radius: 6px;
-      box-shadow: 0 0 10px #f6c343;
-      transition: background-color 0.3s;
-    }
-    .buttons a:hover {
-      background-color: #fff176;
-    }
-  </style>
+</style>
 </head>
 <body>
 
-  <header>
-    <img src="https://imgur.com/a/2MAknTJ.png" alt="Jiim Coin Logo" style="width: 120px; border-radius: 50%; box-shadow: 0 0 20px gold; margin-bottom: 20px;">
-    <h1>Jiim Coin</h1>
-    <p>
-      Jiim Coin is a digital token built on the BRC-20 standard on the Bitcoin blockchain. It aims to become a stable, fast, and decentralized currency for commerce, loyalty systems, and peer-to-peer transactions. The token uses Bitcoin Ordinals technology for inscription and immutable storage.
-    </p>
-  </header>
+<h1>Laam Dex</h1>
 
-  <section>
-    <h2>🔐 Token Overview</h2>
-    <table>
-      <tr><td><strong>Token Name</strong></td><td>Jiim Coin</td></tr>
-      <tr><td><strong>Ticker</strong></td><td>jiim</td></tr>
-      <tr><td><strong>Blockchain</strong></td><td>Bitcoin (BRC-20 Standard)</td></tr>
-      <tr><td><strong>Total Supply</strong></td><td>2,100,000</td></tr>
-      <tr><td><strong>Mint Status</strong></td><td>Minting Closed Permanently</td></tr>
-      <tr><td><strong>Standard</strong></td><td>BRC-20 via Ordinals</td></tr>
-      <tr><td><strong>Decimals</strong></td><td>Conceptual (not enforced)</td></tr>
+<div class="section">
+    <label for="secretKey">Secret Key:</label>
+    <input type="password" id="secretKey" placeholder="Enter your secret key">
+    <button id="loadAccount">LOAD ACCOUNT</button>
+</div>
+
+<div class="section">
+    <label>Public Key:</label>
+    <div class="public-key-box" id="publicKey"></div>
+</div>
+
+<div class="section">
+    <button id="addTrustline">ADD TRUSTLINE FOR LAAM</button>
+</div>
+
+<div class="section">
+    <h2>Trade</h2>
+    <select id="tradeType">
+        <option value="buy">Buy Laam</option>
+        <option value="sell">Sell Laam</option>
+    </select>
+    <input type="number" id="amount" placeholder="Amount">
+    <input type="number" id="price" placeholder="Price in XLM" value="0.135">
+    <button id="placeOrder">Place Order</button>
+</div>
+
+<div class="section">
+    <h2>Buy Offers</h2>
+    <table id="buyOffers">
+        <thead>
+            <tr>
+                <th>Price (XLM/Laam)</th>
+                <th>Amount (Laam)</th>
+                <th>Total (XLM)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
     </table>
-  </section>
+</div>
 
-  <div class="buttons">
-    <a href="https://t.me/jiimcoin" target="_blank">Telegram</a>
-    <a href="https://twitter.com/jiimcoin" target="_blank">Twitter</a>
-    <a href="https://facebook.com/jiimcoin" target="_blank">Facebook</a>
-  </div>
+<div class="section">
+    <h2>Sell Offers</h2>
+    <table id="sellOffers">
+        <thead>
+            <tr>
+                <th>Price (XLM/Laam)</th>
+                <th>Amount (Laam)</th>
+                <th>Total (XLM)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/10.5.0/stellar-sdk.min.js"></script>
+<script>
+const server = new StellarSdk.Server("https://horizon.stellar.org");
+const LAAM_ISSUER = "GAL4ECDAXNBMJYFCWIJ32HKVIRLCNEXY664CAZYI3EINQWPLXTMEPR64";
+const LAAM = new StellarSdk.Asset("Laam", LAAM_ISSUER);
+
+let keypair;
+
+document.getElementById("loadAccount").addEventListener("click", async () => {
+    const secret = document.getElementById("secretKey").value.trim();
+    try {
+        keypair = StellarSdk.Keypair.fromSecret(secret);
+        document.getElementById("publicKey").textContent = keypair.publicKey();
+        alert("Account loaded!");
+    } catch (e) {
+        alert("Invalid Secret Key");
+    }
+});
+
+document.getElementById("addTrustline").addEventListener("click", async () => {
+    if (!keypair) return alert("Load account first!");
+    try {
+        const account = await server.loadAccount(keypair.publicKey());
+        const tx = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+            .addOperation(StellarSdk.Operation.changeTrust({ asset: LAAM }))
+            .setTimeout(100)
+            .build();
+        tx.sign(keypair);
+        await server.submitTransaction(tx);
+        alert("Trustline added!");
+    } catch (e) {
+        alert("Error adding trustline: " + e.message);
+    }
+});
+
+document.getElementById("placeOrder").addEventListener("click", async () => {
+    if (!keypair) return alert("Load account first!");
+    const tradeType = document.getElementById("tradeType").value;
+    const amount = document.getElementById("amount").value;
+    const price = document.getElementById("price").value;
+
+    try {
+        const account = await server.loadAccount(keypair.publicKey());
+        let buying, selling;
+        if (tradeType === "buy") {
+            buying = LAAM;
+            selling = StellarSdk.Asset.native();
+        } else {
+            buying = StellarSdk.Asset.native();
+            selling = LAAM;
+        }
+        const tx = new StellarSdk.TransactionBuilder(account, { fee: StellarSdk.BASE_FEE, networkPassphrase: StellarSdk.Networks.PUBLIC })
+            .addOperation(StellarSdk.Operation.manageSellOffer({
+                selling,
+                buying,
+                amount: amount,
+                price: price
+            }))
+            .setTimeout(100)
+            .build();
+        tx.sign(keypair);
+        await server.submitTransaction(tx);
+        alert("Offer placed!");
+    } catch (e) {
+        alert("Error placing offer: " + e.message);
+    }
+});
+
+async function loadOrderBook() {
+    const orderbook = await server.orderbook(LAAM, StellarSdk.Asset.native()).call();
+    const buyTable = document.querySelector("#buyOffers tbody");
+    const sellTable = document.querySelector("#sellOffers tbody");
+    buyTable.innerHTML = "";
+    sellTable.innerHTML = "";
+
+    orderbook.bids.forEach(bid => {
+        const total = (parseFloat(bid.amount) * parseFloat(bid.price)).toFixed(7);
+        buyTable.innerHTML += `<tr>
+            <td>${parseFloat(bid.price).toFixed(6)}</td>
+            <td>${parseFloat(bid.amount).toFixed(7)}</td>
+            <td>${total}</td>
+        </tr>`;
+    });
+
+    orderbook.asks.forEach(ask => {
+        const total = (parseFloat(ask.amount) * parseFloat(ask.price)).toFixed(7);
+        sellTable.innerHTML += `<tr>
+            <td>${parseFloat(ask.price).toFixed(6)}</td>
+            <td>${parseFloat(ask.amount).toFixed(7)}</td>
+            <td>${total}</td>
+        </tr>`;
+    });
+}
+
+setInterval(loadOrderBook, 5000);
+loadOrderBook();
+</script>
 
 </body>
 </html>
