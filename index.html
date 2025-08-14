@@ -80,10 +80,10 @@
   <div class="app">
     <h1>Laam DEX Wallet</h1>
 
-    <!-- AUTHENTICATION SECTION (Handles login, create, import) -->
+    <!-- AUTHENTICATION SECTION -->
     <div id="authSection">
       <div class="card">
-        <!-- Unlock View (if wallet exists) -->
+        <!-- Unlock View -->
         <div id="unlockView" class="hidden">
           <h3 style="margin:0 0 10px 0; color:var(--brand)">Unlock Wallet</h3>
           <label for="walletPassword">Password</label>
@@ -92,22 +92,30 @@
           <p class="muted" style="margin-top:10px;"><a href="#" id="resetWalletLink">Reset and Import New Key</a></p>
         </div>
 
-        <!-- Initial View (Create or Import) -->
+        <!-- Initial View -->
         <div id="initialView">
           <div class="grid-2">
-            <div>
-              <h3 style="margin:0 0 6px 0; color:var(--brand)">Create New Wallet</h3>
-              <button id="createAccountBtn">Generate New Stellar Account</button>
-              <label style="margin-top:10px;">New Secret Key</label>
-              <div id="newSecret" class="mono">-</div>
-              <label style="margin-top:10px;">New Public Key</label>
-              <div id="newPublic" class="mono">-</div>
-              <div class="muted" style="margin-top:6px;">* Save your secret key securely!</div>
+            <!-- Create Wallet Section -->
+            <div id="createWalletSection">
+                <h3 style="margin:0 0 10px 0; color:var(--brand)">New User?</h3>
+                <button id="showCreateWalletBtn">Create New Wallet</button>
+                <div id="createWalletForm" class="hidden" style="margin-top:10px;">
+                    <button id="generateAccountBtn">Generate New Stellar Account</button>
+                    <label style="margin-top:10px;">New Secret Key</label>
+                    <div id="newSecret" class="mono">-</div>
+                    <label style="margin-top:10px;">New Public Key</label>
+                    <div id="newPublic" class="mono">-</div>
+                    <div class="muted" style="margin-top:6px;">
+                        * Save your secret key securely!<br>
+                        Copy your public wallet and deposit at least 2 XLM to unlock.
+                    </div>
+                </div>
             </div>
+            <!-- Import Wallet Section -->
             <div>
-              <h3 style="margin:0 0 6px 0; color:var(--brand)">Import Existing Wallet</h3>
-              <label>Your Secret Key</label>
-              <input id="secretKeyInput" type="password" placeholder="SB..."/>
+              <h3 style="margin:0 0 10px 0; color:var(--brand)">Have a Wallet?</h3>
+              <label>Enter Your Secret Key</label>
+              <input id="secretKeyInput" type="password" placeholder="Starts with S..."/>
               <label style="margin-top:10px;">Create a Password to Save</label>
               <input id="savePasswordInput" type="password" placeholder="Min. 8 characters"/>
               <button id="importAndSaveBtn" style="margin-top:10px;">Import and Save</button>
@@ -117,7 +125,7 @@
       </div>
     </div>
 
-    <!-- LOGGED IN VIEW (Main App Interface) -->
+    <!-- LOGGED IN VIEW -->
     <div id="loggedInView" class="hidden">
       <!-- Balances & Actions -->
       <div class="card">
@@ -185,7 +193,7 @@ const server = new StellarSdk.Server('https://horizon.stellar.org');
 const ISSUER = 'GAL4ECDAXNBMJYFCWIJ32HKVIRLCNEXY664CAZYI3EINQWPLXTMEPR64';
 const LAAM  = new StellarSdk.Asset('Laam', ISSUER);
 const XLM   = StellarSdk.Asset.native();
-const ENCRYPTED_KEY_NAME = 'laam_dex_wallet_v3';
+const ENCRYPTED_KEY_NAME = 'laam_dex_wallet_v4';
 
 // === GLOBAL STATE ===
 let keypair = null;
@@ -197,6 +205,7 @@ const authSection = document.getElementById('authSection');
 const loggedInView = document.getElementById('loggedInView');
 const unlockView = document.getElementById('unlockView');
 const initialView = document.getElementById('initialView');
+const createWalletForm = document.getElementById('createWalletForm');
 const statusEl = document.getElementById('status');
 
 // === WALLET & ENCRYPTION ===
@@ -232,7 +241,7 @@ async function login(secret) {
     } catch (e) {
         keypair = null; account = null;
         const errMsg = e.message.includes('404') ? 'Account not found. Fund it with XLM to activate.' : 'Could not load account. Check your key.';
-        alert(errMsg); // Use alert for critical errors on login
+        alert(errMsg);
         showView(walletExists() ? 'unlock' : 'initial');
     }
 }
@@ -261,12 +270,17 @@ async function refreshBalances() {
 // === EVENT LISTENERS ===
 
 // --- Auth Flow ---
-document.getElementById('createAccountBtn').addEventListener('click', () => {
+document.getElementById('showCreateWalletBtn').addEventListener('click', (e) => {
+    createWalletForm.classList.remove('hidden');
+    e.target.classList.add('hidden'); // Hide the "Create New Wallet" button
+});
+
+document.getElementById('generateAccountBtn').addEventListener('click', () => {
     const kp = StellarSdk.Keypair.random();
     document.getElementById('newSecret').textContent = kp.secret();
     document.getElementById('newPublic').textContent = kp.publicKey();
     document.getElementById('secretKeyInput').value = kp.secret(); // Auto-fill for easy saving
-    alert('New key generated! Copy the secret key and save it somewhere safe before proceeding.');
+    alert('New key generated! Copy the SECRET KEY and save it somewhere safe before proceeding.');
 });
 
 document.getElementById('importAndSaveBtn').addEventListener('click', () => {
@@ -396,5 +410,5 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 </body>
-    </html>
-    
+                                              </html>
+                                              
